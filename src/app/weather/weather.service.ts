@@ -22,11 +22,17 @@ interface ICurrentWeatherData {
   name: string
 }
 
+export interface IWeatherService {
+  getCurrentWeather(city: string, country: string): Observable<ICurrentWeather>
+}
+
 @Injectable({
   providedIn: 'root',
 })
 
-export class WeatherService {
+
+export class WeatherService implements  IWeatherService {
+
   constructor(private httpClient: HttpClient) {}
 
   httpOptions = {}
@@ -52,3 +58,4 @@ export class WeatherService {
     return kelvin * 9 / 5 - 459.67
   }
 }
+
