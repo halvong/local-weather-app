@@ -1,6 +1,6 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core'
-import { Observable } from 'rxjs'
+import {BehaviorSubject, Observable} from 'rxjs';
 import { map } from 'rxjs/operators'
 import { environment } from '../../environments/environment'
 import { ICurrentWeather } from '../interfaces'
@@ -29,17 +29,47 @@ export interface IWeatherService {
 @Injectable({
   providedIn: 'root',
 })
-
-
-export class WeatherService implements  IWeatherService {
+export class WeatherService implements IWeatherService {
+  currentWeather = new BehaviorSubject<ICurrentWeather>({
+    city: '--',
+    country: '--',
+    date: Date.now(),
+    image: '',
+    temperature: 0,
+    description: '',
+  })
 
   constructor(private httpClient: HttpClient) {}
 
-  httpOptions = {}
+  getCurrentWeather(
+    search: string | number,
+    country?: string
+  ): Observable<ICurrentWeather> {
+    let uriParams = '';
+    if (typeof search === 'string') {
+      uriParams = `q=${search}`;
+    } else {
+      uriParams = `zip=${search}`;
+    }
 
-  getCurrentWeather(city: string, country: string): Observable<ICurrentWeather> {
-    return this.httpClient.get<ICurrentWeatherData>(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${environment.appId}`, this.httpOptions)
+    if (country) {
+      uriParams = `${uriParams},${country}`;
+    }
+
+    return this.getCurrentWeatherHelper(uriParams);
+  }
+
+  getCurrentWeatherByCoords(coords: Coordinates): Observable<ICurrentWeather> {
+    const uriParams = `lat=${coords.latitude}&lon=${coords.longitude}`;
+    return this.getCurrentWeatherHelper(uriParams);
+  }
+
+  private getCurrentWeatherHelper(uriParams: string): Observable<ICurrentWeather> {
+    return this.httpClient
+      .get<ICurrentWeatherData>(
+        `${environment.baseUrl}api.openweathermap.org/data/2.5/weather?` +
+        `${uriParams}&appid=${environment.appId}`
+      )
       .pipe(map(data => this.transformToICurrentWeather(data)))
   }
 
@@ -58,4 +88,3 @@ export class WeatherService implements  IWeatherService {
     return kelvin * 9 / 5 - 459.67
   }
 }
-

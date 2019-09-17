@@ -1,7 +1,6 @@
-import { TestBed, inject } from '@angular/core/testing'
-
-import { WeatherService } from './weather.service'
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { TestBed, inject } from '@angular/core/testing'
+import { WeatherService } from './weather.service'
 
 describe('WeatherService', () => {
   beforeEach(() => {
@@ -10,7 +9,6 @@ describe('WeatherService', () => {
       providers: [WeatherService],
     })
   })
-
   it(
     'should be created',
     inject([WeatherService], (service: WeatherService) => {

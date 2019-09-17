@@ -1,8 +1,8 @@
 AngularJS 6 Enterprise Web Appl, Packtpub Book 
 LocalWeatherApp
-9/12/2019, Thurs
+9/17/2019, Tues
 
-chp6, searching with user input
+chp6, Done with Weather.
 
 #url
 http://localhost:4200/
@@ -19,7 +19,8 @@ http://localhost:4200/
 8. npx ng add @angular/material   --chp5
 9. npm i @angular/flex-layout   
 10. ng generate @angular/material:material-nav --name=side-nav --skip-import 
-
+11. npx ng g c citySearch --module=app.module
+12. npx ng g c citySearchTpldriven --module=app.module
 
 
 #link
